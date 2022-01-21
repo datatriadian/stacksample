@@ -12,7 +12,7 @@ def load_answers(answers_file: Path | str = Path("data/Answers.csv")) -> pd.Data
 
 
 @lru_cache(maxsize=1)
-def load_questions(questions_file: Path | str = Path("data/Questions.csv")) -> pd.DateOffset:
+def load_questions(questions_file: Path | str = Path("data/Questions.csv")) -> pd.DateFrame:
     return pd.read_csv(questions_file, encoding="ISO-8859-1")
 
 
