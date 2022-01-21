@@ -17,7 +17,7 @@ git remote add upstream git@github.com:datatriadian/stacksample.git
 
 This creates the directory stacksample and connects your repository to the upstream (main project) repository.
 
-## Download the data 
+## Download the data
 
 Because of the large size of the data files they are not included in the repo and they need to be
 downloaded. To do this create a `data` directory, the `.gitignore` file is set to ignore the `data`
@@ -47,7 +47,7 @@ This changes your working directory to the my-new-feature branch. Keep any chang
 specific to one bug or feature so the purpose is clear. You can have many my-new-features and switch
 in between them using the git checkout command.
 
-When creating this branch, if you plan to keep your code in sync with the main project, make sure 
+When creating this branch, if you plan to keep your code in sync with the main project, make sure
 your main branch is up to date with the latest upstream main version. To update your local main branch,
 you can do:
 
