@@ -17,6 +17,13 @@ git remote add upstream git@github.com:datatriadian/stacksample.git
 
 This creates the directory stacksample and connects your repository to the upstream (main project) repository.
 
+## Download the data 
+
+Because of the large size of the data files they are not included in the repo and they need to be
+downloaded. To do this create a `data` directory, the `.gitignore` file is set to ignore the `data`
+directory so anything included here won't be added to git, then download the files from
+[here](https://www.kaggle.com/stackoverflow/stacksample) into the newly created `data` directory.
+
 ## Working with the code
 
 Note: This project uses Poetry to manage dependencies. If you do not already have Poetry installed you will need to install it with the instuctions [here](https://python-poetry.org/docs/master/#installation)
