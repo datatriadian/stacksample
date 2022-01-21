@@ -1,0 +1,63 @@
+[tool.poetry]
+name = "stacksample"
+version = "0.1.0"
+description = "StackSample NLP"
+authors = ["Paul Sanders <psanders1@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.7.1"
+pandas = "^1.3.5"
+
+[tool.poetry.dev-dependencies]
+black = "^21.12b0"
+flake8 = "^4.0.1"
+isort = "^5.10.1"
+mypy = "^0.931"
+pre-commit = "^2.16.0"
+pytest = "^6.2.5"
+pytest-cov = "^3.0.0"
+tox = "^3.24.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.egg
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.nox
+  | \.tox
+  | \.venv
+  | \venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | setup.py
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+src_paths = ["stacksample", "tests"]
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--cov=stacksample"
