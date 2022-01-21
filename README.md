@@ -1,7 +1,7 @@
 # DataTriad NLP Project
 
-[![Tests Status](https://github.com/datatriadian/stackshare/workflows/Testing/badge.svg?branch=main&event=push)](https://github.com/datatriadian/stackshare/actions?query=workflow%3ATesting+branch%3Amain+event%3Apush)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/datatriadian/stackshare/main.svg)](https://results.pre-commit.ci/latest/github/datatriadian/stackshare/main)
+[![Tests Status](https://github.com/datatriadian/stacksample/workflows/Testing/badge.svg?branch=main&event=push)](https://github.com/datatriadian/stacksample/actions?query=workflow%3ATesting+branch%3Amain+event%3Apush)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/datatriadian/stacksample/main.svg)](https://results.pre-commit.ci/latest/github/datatriadian/stacksample/main)
 
 This repo is for the DataTriad NLP project. To use follow the stops below.
 
