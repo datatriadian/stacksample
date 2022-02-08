@@ -24,5 +24,5 @@ stacksample --help
 For help on a specific section (for example training) run:
 
 ```sh
-stacksample training --help
+stacksample train --help
 ```
