@@ -22,6 +22,7 @@ def combine_and_format_data(
     reduce_number_of_samples: int | None = None,
     exclude_answers: bool = False,
     exclude_title: bool = False,
+    limit_tags: int | None = None,
     random_state: int | None = None,
 ) -> pd.DataFrame:
     df = questions[["Id", "Body"]].rename(columns={"Id": "id", "Body": "sentences"})
@@ -43,7 +44,7 @@ def combine_and_format_data(
     # There can be multiple tags for the same answer/question so combine these into one
     tags_df = tags_df.dropna().groupby("id")["tag"].apply(", ".join).reset_index()
 
-    df = df.merge(tags_df, how="left", on="id")
+    df = df.merge(tags_df, on="id")
     df = df[["sentences", "tag"]]
 
     if reduce_number_of_samples:
@@ -53,11 +54,22 @@ def combine_and_format_data(
         keep = df[df.groupby("tag")["tag"].transform("size") >= minimum_labels]
         df = df[df["tag"].isin(keep["tag"])]
 
-    if crop_sentences:
-        df = _crop_sentences(df, crop_sentences)
+    if limit_tags:
+        limit_df = (
+            df.groupby("tag")
+            .size()
+            .reset_index(name="count")
+            .sort_values(["count"], ascending=False)
+            .head(limit_tags)
+        )
+
+        df = df[df["tag"].isin(limit_df["tag"])]
 
     if remove_html_tags:
         df = _remove_html(df)
+
+    if crop_sentences:
+        df = _crop_sentences(df, crop_sentences)
 
     if remove_line_breaks:
         df = _remove_line_breaks(df)
