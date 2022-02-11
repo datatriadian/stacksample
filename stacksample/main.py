@@ -58,6 +58,9 @@ def view_labels(
     exclude_answers: bool = Option(
         False, help="If this flag is set the answers will be excluded. Default = False"
     ),
+    limit_tags: Optional[int] = Option(
+        None, help="Specifies the maximum number of tags to use in training. Default = None"
+    ),
 ) -> None:
     with console.status("Loading data..."):
         answers, questions, tags = load_all(
@@ -82,6 +85,7 @@ def view_labels(
             random_state=random_state,
             exclude_answers=exclude_answers,
             exclude_title=exclude_title,
+            limit_tags=limit_tags,
         )
 
     pd.set_option("display.max_rows", df.shape[0] + 1)
@@ -138,6 +142,9 @@ def train(
     exclude_answers: bool = Option(
         False, help="If this flag is set the answers will be excluded. Default = False"
     ),
+    limit_tags: Optional[int] = Option(
+        None, help="Specifies the maximum number of tags to use in training. Default = None"
+    ),
     balance_train_data: bool = Option(
         False,
         help="If this flag is set oversampling will be preformed on the train data. Default = False",
@@ -167,6 +174,7 @@ def train(
             random_state=random_state,
             exclude_answers=exclude_answers,
             exclude_title=exclude_title,
+            limit_tags=limit_tags,
         )
 
     with console.status("Training..."):
