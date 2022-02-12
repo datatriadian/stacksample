@@ -6,6 +6,7 @@ from sklearn import svm
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
 
 from stacksample.console import console
 
@@ -77,7 +78,29 @@ def combine_and_format_data(
     return df
 
 
-def train_model(
+def train_naive_bayes_model(
+    df: pd.DataFrame,
+    test_size: float = 0.2,
+    random_state: int | None = None,
+    balance_train_dataset: bool = False,
+) -> None:
+    gnb = GaussianNB()
+    X_train, y_train, X_test, y_test = _split_and_vectorize(df, test_size, random_state)
+
+    console.print("Labels used for SVM training: ", y_train.unique())
+
+    if balance_train_dataset:
+        oversample = SMOTE(random_state=random_state)
+        X_train, y_train = oversample.fit_resample(X_train, y_train)
+
+    gnb.fit(X_train.todense(), y_train)
+    console.print(f"Naive Bayes Accuracy: {gnb.score(X_test.todense(), y_test) * 100}%")
+    console.print(
+        f"Naive Bays f1 score: {f1_score(y_test, gnb.predict(X_test.todense()), average=None)}"
+    )
+
+
+def train_svm_model(
     df: pd.DataFrame,
     test_size: float = 0.2,
     random_state: int | None = None,
@@ -85,25 +108,17 @@ def train_model(
     c_value: float = 1.0,
 ) -> None:
     clf = svm.SVC(C=c_value, kernel="linear", gamma="auto")
-    train, test = train_test_split(df, test_size=test_size, random_state=random_state)
+    X_train, y_train, X_test, y_test = _split_and_vectorize(df, test_size, random_state)
 
-    vectorizer = TfidfVectorizer()
-    vectorizer.fit(df["sentences"])
-
-    X_train = vectorizer.transform(train["sentences"])
-    y_train = train["tag"]
-    X_test = vectorizer.transform(test["sentences"])
-    y_test = test["tag"]
-
-    console.print("Labels used for training: ", y_train.unique())
+    console.print("Labels used for SVM training: ", y_train.unique())
 
     if balance_train_dataset:
         oversample = SMOTE(random_state=random_state)
         X_train, y_train = oversample.fit_resample(X_train, y_train)
 
     clf.fit(X_train, y_train)
-    console.print(f"Accuracy: {clf.score(X_test, y_test) * 100}%")
-    console.print(f"f1 score: {f1_score(y_test, clf.predict(X_test), average=None)}")
+    console.print(f"SVM Accuracy: {clf.score(X_test, y_test) * 100}%")
+    console.print(f"SVM f1 score: {f1_score(y_test, clf.predict(X_test), average=None)}")
 
 
 def _crop_sentences(df: pd.DataFrame, max_length: int = 128) -> pd.DataFrame:
@@ -119,3 +134,19 @@ def _remove_html(df: pd.DataFrame) -> pd.DataFrame:
 def _remove_line_breaks(df: pd.DataFrame) -> pd.DataFrame:
     df["sentences"] = df["sentences"].str.replace(r"\\n", " ", regex=True)
     return df
+
+
+def _split_and_vectorize(
+    df: pd.DataFrame, test_size: float, random_state: int | None = None
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    train, test = train_test_split(df, test_size=test_size, random_state=random_state)
+
+    vectorizer = TfidfVectorizer()
+    vectorizer.fit(df["sentences"])
+
+    X_train = vectorizer.transform(train["sentences"])
+    y_train = train["tag"]
+    X_test = vectorizer.transform(test["sentences"])
+    y_test = test["tag"]
+
+    return X_train, y_train, X_test, y_test
