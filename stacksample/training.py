@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import pickle
 from multiprocessing import cpu_count
+from pathlib import Path
 
 import pandas as pd
 from imblearn.over_sampling import SMOTE
@@ -85,6 +87,8 @@ def train_naive_bayes_model(
     test_size: float = 0.2,
     random_state: int | None = None,
     balance_train_dataset: bool = False,
+    save_model: bool = True,
+    save_path: Path | None = None,
 ) -> None:
     with console.status("Training Naive Bayes Model..."):
         gnb = GaussianNB()
@@ -106,6 +110,16 @@ def train_naive_bayes_model(
             f"Naive Bays f1 score: {f1_score(y_test, gnb.predict(X_test.todense()), average=None)}"
         )
 
+    if save_model:
+        with console.status("Saving Naive Bayes model..."):
+            if save_path:
+                save = save_path
+            else:
+                save = Path("./models/naive_bayes_classifier.plk")
+
+            with open(save, "wb") as f:
+                pickle.dump(gnb, f)
+
 
 def train_svm_model(
     df: pd.DataFrame,
@@ -113,6 +127,8 @@ def train_svm_model(
     random_state: int | None = None,
     balance_train_dataset: bool = False,
     c_value: float = 1.0,
+    save_model: bool = True,
+    save_path: Path | None = None,
 ) -> None:
     with console.status("Training SVM Model..."):
         clf = svm.SVC(C=c_value, kernel="linear", gamma="auto")
@@ -132,6 +148,16 @@ def train_svm_model(
     with console.status("Calculating SVM f1 Scores..."):
         console.print(f"SVM f1 score: {f1_score(y_test, clf.predict(X_test), average=None)}")
 
+    if save_model:
+        with console.status("Saving SVM model..."):
+            if save_path:
+                save = save_path
+            else:
+                save = Path("./models/svm_classifier.plk")
+
+            with open(save, "wb") as f:
+                pickle.dump(clf, f)
+
 
 def train_svm_model_grid_search(
     df: pd.DataFrame,
@@ -139,8 +165,10 @@ def train_svm_model_grid_search(
     random_state: int | None = None,
     balance_train_dataset: bool = False,
     n_jobs: int = cpu_count(),
+    save_model: bool = True,
+    save_path: Path | None = None,
 ) -> None:
-    with console.status("Training SVM Model..."):
+    with console.status("Training SVM Model With Grid Search..."):
         parameters = {
             "kernel": ("linear", "rbf"),
             "C": (0.1, 1, 8, 16, 32),
@@ -164,6 +192,16 @@ def train_svm_model_grid_search(
 
     with console.status("Calculating SVM f1 Scores..."):
         console.print(f"SVM f1 score: {f1_score(y_test, clf.predict(X_test), average=None)}")
+
+    if save_model:
+        with console.status("Saving SVM grid search model..."):
+            if save_path:
+                save = save_path
+            else:
+                save = Path("./models/svm_grid_search_classifier.plk")
+
+            with open(save, "wb") as f:
+                pickle.dump(clf, f)
 
 
 def _crop_sentences(df: pd.DataFrame, max_length: int = 128) -> pd.DataFrame:

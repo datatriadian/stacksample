@@ -156,6 +156,15 @@ def train_all_models(
         help="If this flag is set oversampling will be preformed on the train data. Default = False",
     ),
     c_value: float = Option(1.0, "-c", help="Sets the C value for the SVM. Default = 1.0"),
+    save_model: bool = Option(True, help="Save the model after training. Default = True"),
+    naive_bayes_save_path: Optional[Path] = Option(
+        None,
+        help="The path and file name for saving the naive bayes model if saving the model. Default = None",
+    ),
+    svm_save_path: Optional[Path] = Option(
+        None,
+        help="The path and file name for saving the SVM model if saving the model. Default = None",
+    ),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -186,6 +195,8 @@ def train_all_models(
         test_size=test_size,
         random_state=random_state,
         balance_train_dataset=balance_train_data,
+        save_model=save_model,
+        save_path=naive_bayes_save_path,
     )
 
     train_svm_model(
@@ -194,6 +205,8 @@ def train_all_models(
         random_state=random_state,
         balance_train_dataset=balance_train_data,
         c_value=c_value,
+        save_model=save_model,
+        save_path=svm_save_path,
     )
 
 
@@ -254,6 +267,10 @@ def train_naive_bayes(
         False,
         help="If this flag is set oversampling will be preformed on the train data. Default = False",
     ),
+    save_model: bool = Option(True, help="Save the model after training. Default = True"),
+    save_path: Optional[Path] = Option(
+        None, help="The path and file name for saving the model if saving the model. Default = None"
+    ),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -284,6 +301,8 @@ def train_naive_bayes(
         test_size=test_size,
         random_state=random_state,
         balance_train_dataset=balance_train_data,
+        save_model=save_model,
+        save_path=save_path,
     )
 
 
@@ -345,6 +364,10 @@ def train_svm(
         help="If this flag is set oversampling will be preformed on the train data. Default = False",
     ),
     c_value: float = Option(1.0, "-c", help="Sets the C value for the SVM. Default = 1.0"),
+    save_model: bool = Option(True, help="Save the model after training. Default = True"),
+    save_path: Optional[Path] = Option(
+        None, help="The path and file name for saving the model if saving the model. Default = None"
+    ),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -376,6 +399,8 @@ def train_svm(
         random_state=random_state,
         balance_train_dataset=balance_train_data,
         c_value=c_value,
+        save_model=save_model,
+        save_path=save_path,
     )
 
 
@@ -440,6 +465,10 @@ def train_svm_grid_search(
         cpu_count(),
         help="The number of CPU cores to use for training. Default = The number of available CPU cores",
     ),
+    save_model: bool = Option(True, help="Save the model after training. Default = True"),
+    save_path: Optional[Path] = Option(
+        None, help="The path and file name for saving the model if saving the model. Default = None"
+    ),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -471,6 +500,8 @@ def train_svm_grid_search(
         random_state=random_state,
         balance_train_dataset=balance_train_data,
         n_jobs=n_jobs,
+        save_model=save_model,
+        save_path=save_path,
     )
 
 
