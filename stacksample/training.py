@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+from multiprocessing import cpu_count
+
 import pandas as pd
 from imblearn.over_sampling import SMOTE
 from sklearn import svm
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import f1_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.naive_bayes import GaussianNB
 
 from stacksample.console import console
@@ -88,7 +90,7 @@ def train_naive_bayes_model(
         gnb = GaussianNB()
         X_train, y_train, X_test, y_test = _split_and_vectorize(df, test_size, random_state)
 
-        console.print("Labels used for SVM training: ", y_train.unique())
+        console.print("Labels used for Naive Bayes training: ", y_train.unique())
 
         if balance_train_dataset:
             oversample = SMOTE(random_state=random_state)
@@ -123,6 +125,40 @@ def train_svm_model(
             X_train, y_train = oversample.fit_resample(X_train, y_train)
 
         clf.fit(X_train, y_train)
+
+    with console.status("Calculating SVM Accuracy..."):
+        console.print(f"SVM Accuracy: {clf.score(X_test, y_test) * 100}%")
+
+    with console.status("Calculating SVM f1 Scores..."):
+        console.print(f"SVM f1 score: {f1_score(y_test, clf.predict(X_test), average=None)}")
+
+
+def train_svm_model_grid_search(
+    df: pd.DataFrame,
+    test_size: float = 0.2,
+    random_state: int | None = None,
+    balance_train_dataset: bool = False,
+    n_jobs: int = cpu_count(),
+) -> None:
+    with console.status("Training SVM Model..."):
+        parameters = {
+            "kernel": ("linear", "rbf"),
+            "C": (0.1, 1, 8, 16, 32),
+            "gamma": ("scale", "auto"),
+        }
+        svc = svm.SVC()
+        clf = GridSearchCV(svc, parameters, n_jobs=n_jobs)
+        X_train, y_train, X_test, y_test = _split_and_vectorize(df, test_size, random_state)
+
+        console.print("Labels used for SVM training: ", y_train.unique())
+
+        if balance_train_dataset:
+            oversample = SMOTE(random_state=random_state)
+            X_train, y_train = oversample.fit_resample(X_train, y_train)
+
+        clf.fit(X_train, y_train)
+        console.print(f"Best parameters: {clf.best_params_}")
+
     with console.status("Calculating SVM Accuracy..."):
         console.print(f"SVM Accuracy: {clf.score(X_test, y_test) * 100}%")
 
