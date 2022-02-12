@@ -175,22 +175,20 @@ def train_all_models(
         limit_tags=limit_tags,
     )
 
-    with console.status("Training Naive Bayes Model..."):
-        train_naive_bayes_model(
-            df,
-            test_size=test_size,
-            random_state=random_state,
-            balance_train_dataset=balance_train_data,
-        )
+    train_naive_bayes_model(
+        df,
+        test_size=test_size,
+        random_state=random_state,
+        balance_train_dataset=balance_train_data,
+    )
 
-    with console.status("Training SVM Model..."):
-        train_svm_model(
-            df,
-            test_size=test_size,
-            random_state=random_state,
-            balance_train_dataset=balance_train_data,
-            c_value=c_value,
-        )
+    train_svm_model(
+        df,
+        test_size=test_size,
+        random_state=random_state,
+        balance_train_dataset=balance_train_data,
+        c_value=c_value,
+    )
 
 
 @app.command()
@@ -275,13 +273,12 @@ def train_naive_bayes(
         limit_tags=limit_tags,
     )
 
-    with console.status("Training Naive Bayes Model..."):
-        train_naive_bayes_model(
-            df,
-            test_size=test_size,
-            random_state=random_state,
-            balance_train_dataset=balance_train_data,
-        )
+    train_naive_bayes_model(
+        df,
+        test_size=test_size,
+        random_state=random_state,
+        balance_train_dataset=balance_train_data,
+    )
 
 
 @app.command()
@@ -367,14 +364,13 @@ def train_svm(
         limit_tags=limit_tags,
     )
 
-    with console.status("Training SVM Model..."):
-        train_svm_model(
-            df,
-            test_size=test_size,
-            random_state=random_state,
-            balance_train_dataset=balance_train_data,
-            c_value=c_value,
-        )
+    train_svm_model(
+        df,
+        test_size=test_size,
+        random_state=random_state,
+        balance_train_dataset=balance_train_data,
+        c_value=c_value,
+    )
 
 
 def _load_all(
