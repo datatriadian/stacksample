@@ -84,20 +84,25 @@ def train_naive_bayes_model(
     random_state: int | None = None,
     balance_train_dataset: bool = False,
 ) -> None:
-    gnb = GaussianNB()
-    X_train, y_train, X_test, y_test = _split_and_vectorize(df, test_size, random_state)
+    with console.status("Training Naive Bayes Model..."):
+        gnb = GaussianNB()
+        X_train, y_train, X_test, y_test = _split_and_vectorize(df, test_size, random_state)
 
-    console.print("Labels used for SVM training: ", y_train.unique())
+        console.print("Labels used for SVM training: ", y_train.unique())
 
-    if balance_train_dataset:
-        oversample = SMOTE(random_state=random_state)
-        X_train, y_train = oversample.fit_resample(X_train, y_train)
+        if balance_train_dataset:
+            oversample = SMOTE(random_state=random_state)
+            X_train, y_train = oversample.fit_resample(X_train, y_train)
 
-    gnb.fit(X_train.todense(), y_train)
-    console.print(f"Naive Bayes Accuracy: {gnb.score(X_test.todense(), y_test) * 100}%")
-    console.print(
-        f"Naive Bays f1 score: {f1_score(y_test, gnb.predict(X_test.todense()), average=None)}"
-    )
+        gnb.fit(X_train.todense(), y_train)
+
+    with console.status("Calculating Naive Bayes Accuracy..."):
+        console.print(f"Naive Bayes Accuracy: {gnb.score(X_test.todense(), y_test) * 100}%")
+
+    with console.status("Calculating Naive Bayes f1 Scores..."):
+        console.print(
+            f"Naive Bays f1 score: {f1_score(y_test, gnb.predict(X_test.todense()), average=None)}"
+        )
 
 
 def train_svm_model(
@@ -107,18 +112,22 @@ def train_svm_model(
     balance_train_dataset: bool = False,
     c_value: float = 1.0,
 ) -> None:
-    clf = svm.SVC(C=c_value, kernel="linear", gamma="auto")
-    X_train, y_train, X_test, y_test = _split_and_vectorize(df, test_size, random_state)
+    with console.status("Training SVM Model..."):
+        clf = svm.SVC(C=c_value, kernel="linear", gamma="auto")
+        X_train, y_train, X_test, y_test = _split_and_vectorize(df, test_size, random_state)
 
-    console.print("Labels used for SVM training: ", y_train.unique())
+        console.print("Labels used for SVM training: ", y_train.unique())
 
-    if balance_train_dataset:
-        oversample = SMOTE(random_state=random_state)
-        X_train, y_train = oversample.fit_resample(X_train, y_train)
+        if balance_train_dataset:
+            oversample = SMOTE(random_state=random_state)
+            X_train, y_train = oversample.fit_resample(X_train, y_train)
 
-    clf.fit(X_train, y_train)
-    console.print(f"SVM Accuracy: {clf.score(X_test, y_test) * 100}%")
-    console.print(f"SVM f1 score: {f1_score(y_test, clf.predict(X_test), average=None)}")
+        clf.fit(X_train, y_train)
+    with console.status("Calculating SVM Accuracy..."):
+        console.print(f"SVM Accuracy: {clf.score(X_test, y_test) * 100}%")
+
+    with console.status("Calculating SVM f1 Scores..."):
+        console.print(f"SVM f1 score: {f1_score(y_test, clf.predict(X_test), average=None)}")
 
 
 def _crop_sentences(df: pd.DataFrame, max_length: int = 128) -> pd.DataFrame:
