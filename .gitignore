@@ -136,5 +136,6 @@ dmypy.json
 .idea
 .vscode
 
-# Ignore the data folder because it has large files
+# Ignore the data and models directories because they have large files
 data/
+models/
