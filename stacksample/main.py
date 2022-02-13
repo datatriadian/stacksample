@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from multiprocessing import cpu_count
 from pathlib import Path
 from typing import Optional
@@ -155,7 +157,7 @@ def train_all_models(
         help="If this flag is set oversampling will be preformed on the train data. Default = False",
     ),
     c_value: float = Option(1.0, "-c", help="Sets the C value for the SVM. Default = 1.0"),
-    save_model: bool = Option(True, help="Save the model after training. Default = True"),
+    save_model: bool = Option(False, help="Save the model after training. Default = False"),
     naive_bayes_save_path: Optional[Path] = Option(
         None,
         help="The path for saving the naive bayes model if saving the model. Default = None",
@@ -266,7 +268,7 @@ def train_naive_bayes(
         False,
         help="If this flag is set oversampling will be preformed on the train data. Default = False",
     ),
-    save_model: bool = Option(True, help="Save the model after training. Default = True"),
+    save_model: bool = Option(False, help="Save the model after training. Default = False"),
     save_path: Optional[Path] = Option(
         None, help="The path for saving the model if saving the model. Default = None"
     ),
@@ -363,7 +365,7 @@ def train_svm(
         help="If this flag is set oversampling will be preformed on the train data. Default = False",
     ),
     c_value: float = Option(1.0, "-c", help="Sets the C value for the SVM. Default = 1.0"),
-    save_model: bool = Option(True, help="Save the model after training. Default = True"),
+    save_model: bool = Option(False, help="Save the model after training. Default = False"),
     save_path: Optional[Path] = Option(
         None, help="The path for saving the model if saving the model. Default = None"
     ),
@@ -464,7 +466,7 @@ def train_svm_grid_search(
         cpu_count(),
         help="The number of CPU cores to use for training. Default = The number of available CPU cores",
     ),
-    save_model: bool = Option(True, help="Save the model after training. Default = True"),
+    save_model: bool = Option(False, help="Save the model after training. Default = False"),
     save_path: Optional[Path] = Option(
         None, help="The path for saving the model if saving the model. Default = None"
     ),

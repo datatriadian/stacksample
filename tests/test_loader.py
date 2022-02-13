@@ -13,4 +13,4 @@ def test_load_questions(mock_data_directory):
 
 def test_load_tags(mock_data_directory):
     df = load_tags(mock_data_directory / "Tags.csv", encoding="ISO8859-1")
-    assert df.iloc[0]["Id"] == 70
+    assert df.iloc[0]["Id"] == 80
