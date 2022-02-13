@@ -3,8 +3,6 @@ from pathlib import Path
 from typing import Optional
 
 import pandas as pd
-from typer import Option, Typer
-
 from stacksample.console import console
 from stacksample.loader import load_all
 from stacksample.training import (
@@ -13,6 +11,7 @@ from stacksample.training import (
     train_svm_model,
     train_svm_model_grid_search,
 )
+from typer import Option, Typer
 
 app = Typer()
 _DEFAULT_ENCODING = "ISO8859-1"
