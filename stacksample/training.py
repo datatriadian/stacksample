@@ -11,6 +11,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import f1_score
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.naive_bayes import GaussianNB
+
 from stacksample.console import console
 
 
@@ -46,7 +47,9 @@ def combine_and_format_data(
     tags_df = tags.rename(columns={"Id": "id", "Tag": "tag"})
 
     # There can be multiple tags for the same answer/question so combine these into one
-    tags_df = tags_df.dropna().groupby("id")["tag"].apply(", ".join).reset_index()
+    tags_df = (
+        tags_df.dropna().sort_values(by=["tag"]).groupby("id")["tag"].apply(", ".join).reset_index()
+    )
 
     df = df.merge(tags_df, on="id")
     df = df[["sentences", "tag"]]
