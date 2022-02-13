@@ -138,4 +138,3 @@ dmypy.json
 
 # Ignore the data and models directories because they have large files
 data/
-models/

@@ -1,0 +1,69 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = "StackSample Backend"
+authors = ["Paul Sanders <psanders1@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.8, <3.11"  # scypi fails to install if <3.11 is not specified
+camel-converter = "1.0.3"
+fastapi = "0.73.0"
+uvicorn = {version = "0.17.3", extras = ["standard"]}
+scikit-learn = "1.0.2"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1"
+flake8 = "^4.0.1"
+isort = "^5.10.1"
+mypy = "^0.931"
+pre-commit = "^2.16.0"
+pytest = "^7.0.0"
+pytest-cov = "^3.0.0"
+tox = "^3.24.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.egg
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.nox
+  | \.tox
+  | \.venv
+  | \venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | setup.py
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+src_paths = ["stacksample", "tests"]
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+module = ["sklearn.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--cov=app"

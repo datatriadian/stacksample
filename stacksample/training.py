@@ -11,7 +11,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import f1_score
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.naive_bayes import GaussianNB
-
 from stacksample.console import console
 
 
@@ -92,7 +91,9 @@ def train_naive_bayes_model(
 ) -> None:
     with console.status("Training Naive Bayes Model..."):
         gnb = GaussianNB()
-        X_train, y_train, X_test, y_test = _split_and_vectorize(df, test_size, random_state)
+        X_train, y_train, X_test, y_test, vectorizer = _split_and_vectorize(
+            df, test_size, random_state
+        )
 
         console.print("Labels used for Naive Bayes training: ", y_train.unique())
 
@@ -113,12 +114,17 @@ def train_naive_bayes_model(
     if save_model:
         with console.status("Saving Naive Bayes model..."):
             if save_path:
-                save = save_path
+                save_classifier = save_path / "naive_bayes_classifier.pkl"
+                save_vectorizer = save_path / "vectorizer.pkl"
             else:
-                save = Path("./models/naive_bayes_classifier.plk")
+                save_classifier = Path("./backend/models/naive_bays_classifier.pkl")
+                save_vectorizer = Path("./backend/models/vectorizer.pkl")
 
-            with open(save, "wb") as f:
+            with open(save_classifier, "wb") as f:
                 pickle.dump(gnb, f)
+
+            with open(save_vectorizer, "wb") as f:
+                pickle.dump(vectorizer, f)
 
 
 def train_svm_model(
@@ -132,7 +138,9 @@ def train_svm_model(
 ) -> None:
     with console.status("Training SVM Model..."):
         clf = svm.SVC(C=c_value, kernel="linear", gamma="auto")
-        X_train, y_train, X_test, y_test = _split_and_vectorize(df, test_size, random_state)
+        X_train, y_train, X_test, y_test, vectorizer = _split_and_vectorize(
+            df, test_size, random_state
+        )
 
         console.print("Labels used for SVM training: ", y_train.unique())
 
@@ -151,12 +159,17 @@ def train_svm_model(
     if save_model:
         with console.status("Saving SVM model..."):
             if save_path:
-                save = save_path
+                save_classifier = save_path / "svm_classifier.pkl"
+                save_vectorizer = save_path / "vectorizer.pkl"
             else:
-                save = Path("./models/svm_classifier.plk")
+                save_classifier = Path("./backend/models/svm_classifier.pkl")
+                save_vectorizer = Path("./backend/models/vectorizer.pkl")
 
-            with open(save, "wb") as f:
+            with open(save_classifier, "wb") as f:
                 pickle.dump(clf, f)
+
+            with open(save_vectorizer, "wb") as f:
+                pickle.dump(vectorizer, f)
 
 
 def train_svm_model_grid_search(
@@ -176,7 +189,9 @@ def train_svm_model_grid_search(
         }
         svc = svm.SVC()
         clf = GridSearchCV(svc, parameters, n_jobs=n_jobs)
-        X_train, y_train, X_test, y_test = _split_and_vectorize(df, test_size, random_state)
+        X_train, y_train, X_test, y_test, vectorizer = _split_and_vectorize(
+            df, test_size, random_state
+        )
 
         console.print("Labels used for SVM training: ", y_train.unique())
 
@@ -196,12 +211,17 @@ def train_svm_model_grid_search(
     if save_model:
         with console.status("Saving SVM grid search model..."):
             if save_path:
-                save = save_path
+                save_classifier = save_path / "svm_grid_search_classifier.pkl"
+                save_vectorizer = save_path / "vectorizer.pkl"
             else:
-                save = Path("./models/svm_grid_search_classifier.plk")
+                save_classifier = Path("./backend/models/svm_grid_search_classifier.pkl")
+                save_vectorizer = Path("./backend/models/vectorizer.pkl")
 
-            with open(save, "wb") as f:
+            with open(save_classifier, "wb") as f:
                 pickle.dump(clf, f)
+
+            with open(save_vectorizer, "wb") as f:
+                pickle.dump(vectorizer, f)
 
 
 def _crop_sentences(df: pd.DataFrame, max_length: int = 128) -> pd.DataFrame:
@@ -221,7 +241,7 @@ def _remove_line_breaks(df: pd.DataFrame) -> pd.DataFrame:
 
 def _split_and_vectorize(
     df: pd.DataFrame, test_size: float, random_state: int | None = None
-) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, TfidfVectorizer]:
     train, test = train_test_split(df, test_size=test_size, random_state=random_state)
 
     vectorizer = TfidfVectorizer()
@@ -232,4 +252,4 @@ def _split_and_vectorize(
     X_test = vectorizer.transform(test["sentences"])
     y_test = test["tag"]
 
-    return X_train, y_train, X_test, y_test
+    return X_train, y_train, X_test, y_test, vectorizer
