@@ -11,6 +11,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import f1_score
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.naive_bayes import GaussianNB
+
 from stacksample.console import console
 
 
@@ -46,9 +47,7 @@ def combine_and_format_data(
     tags_df = tags.rename(columns={"Id": "id", "Tag": "tag"})
 
     # There can be multiple tags for the same answer/question so combine these into one
-    tags_df = (
-        tags_df.dropna().sort_values(by=["tag"]).groupby("id")["tag"].apply(", ".join).reset_index()
-    )
+    tags_df = _create_composit_labels(tags_df)
 
     df = df.merge(tags_df, on="id")
     df = df[["sentences", "tag"]]
@@ -224,6 +223,11 @@ def train_svm_model_grid_search(
 
             with open(save_vectorizer, "wb") as f:
                 pickle.dump(vectorizer, f)
+
+
+def _create_composit_labels(df: pd.DataFrame) -> pd.DataFrame:
+    """There can be multiple tags for the same answer/question so combine these into one."""
+    return df.dropna().sort_values(by=["tag"]).groupby("id")["tag"].apply(", ".join).reset_index()
 
 
 def _crop_sentences(df: pd.DataFrame, max_length: int = 128) -> pd.DataFrame:
