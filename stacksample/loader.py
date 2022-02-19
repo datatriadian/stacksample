@@ -24,14 +24,44 @@ def load_all(
 
 @lru_cache(maxsize=1)
 def load_answers(answers_file: Path | str, encoding: str) -> pd.DataFrame:
-    return pd.read_csv(answers_file, encoding=encoding)
+    answers_pickle = (
+        Path(str(answers_file).replace(".csv", ".pkl"))
+        if isinstance(answers_file, Path)
+        else Path(answers_file.replace(".csv", ".pkl"))
+    )
+    if answers_pickle.exists():
+        return pd.read_pickle(answers_pickle)
+
+    df = pd.read_csv(answers_file, encoding=encoding)
+    pd.to_pickle(df, answers_pickle)
+    return df
 
 
 @lru_cache(maxsize=1)
 def load_questions(questions_file: Path | str, encoding: str) -> pd.DateFrame:
-    return pd.read_csv(questions_file, encoding=encoding)
+    questions_pickle = (
+        Path(str(questions_file).replace(".csv", ".pkl"))
+        if isinstance(questions_file, Path)
+        else Path(questions_file.replace(".csv", ".pkl"))
+    )
+    if questions_pickle.exists():
+        return pd.read_pickle(questions_pickle)
+
+    df = pd.read_csv(questions_file, encoding=encoding)
+    pd.to_pickle(df, questions_pickle)
+    return df
 
 
 @lru_cache(maxsize=1)
 def load_tags(tags_file: Path | str, encoding: str) -> pd.DataFrame:
-    return pd.read_csv(tags_file, encoding=encoding)
+    tags_pickle = (
+        Path(str(tags_file).replace(".csv", ".pkl"))
+        if isinstance(tags_file, Path)
+        else Path(tags_file.replace(".csv", ".pkl"))
+    )
+    if tags_pickle.exists():
+        return pd.read_pickle(tags_pickle)
+
+    df = pd.read_csv(tags_file, encoding=encoding)
+    pd.to_pickle(df, tags_pickle)
+    return df
