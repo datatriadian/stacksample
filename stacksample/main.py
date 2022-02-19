@@ -166,6 +166,7 @@ def train_all_models(
         None,
         help="The path for saving the SVM model if saving the model. Default = None",
     ),
+    lowercase: bool = Option(False, help="Convert text to lowercase. Default = False"),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -189,6 +190,7 @@ def train_all_models(
         exclude_answers=exclude_answers,
         exclude_title=exclude_title,
         limit_tags=limit_tags,
+        lowercase=lowercase,
     )
 
     train_naive_bayes_model(
@@ -272,6 +274,7 @@ def train_naive_bayes(
     save_path: Optional[Path] = Option(
         None, help="The path for saving the model if saving the model. Default = None"
     ),
+    lowercase: bool = Option(False, help="Convert text to lowercase. Default = False"),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -295,6 +298,7 @@ def train_naive_bayes(
         exclude_answers=exclude_answers,
         exclude_title=exclude_title,
         limit_tags=limit_tags,
+        lowercase=lowercase,
     )
 
     train_naive_bayes_model(
@@ -369,6 +373,7 @@ def train_svm(
     save_path: Optional[Path] = Option(
         None, help="The path for saving the model if saving the model. Default = None"
     ),
+    lowercase: bool = Option(False, help="Convert text to lowercase. Default = False"),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -392,6 +397,7 @@ def train_svm(
         exclude_answers=exclude_answers,
         exclude_title=exclude_title,
         limit_tags=limit_tags,
+        lowercase=lowercase,
     )
 
     train_svm_model(
@@ -470,6 +476,7 @@ def train_svm_grid_search(
     save_path: Optional[Path] = Option(
         None, help="The path for saving the model if saving the model. Default = None"
     ),
+    lowercase: bool = Option(False, help="Convert text to lowercase. Default = False"),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -493,6 +500,7 @@ def train_svm_grid_search(
         exclude_answers=exclude_answers,
         exclude_title=exclude_title,
         limit_tags=limit_tags,
+        lowercase=lowercase,
     )
 
     train_svm_model_grid_search(
@@ -540,6 +548,7 @@ def _combine_and_format_data(
     exclude_answers: bool,
     exclude_title: bool,
     limit_tags: int | None,
+    lowercase: bool,
 ) -> pd.DataFrame:
     with console.status("Preparing data..."):
         df = combine_and_format_data(
@@ -555,6 +564,7 @@ def _combine_and_format_data(
             exclude_answers=exclude_answers,
             exclude_title=exclude_title,
             limit_tags=limit_tags,
+            lowercase=lowercase,
         )
 
     return df

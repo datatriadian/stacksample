@@ -28,6 +28,7 @@ def combine_and_format_data(
     exclude_title: bool = False,
     limit_tags: int | None = None,
     random_state: int | None = None,
+    lowercase: bool = False,
 ) -> pd.DataFrame:
     df = questions[["Id", "Body"]].rename(columns={"Id": "id", "Body": "sentences"})
 
@@ -77,6 +78,9 @@ def combine_and_format_data(
 
     if remove_line_breaks:
         df = _remove_line_breaks(df)
+
+    if lowercase:
+        df["sentences"] = df["sentences"].str.lower()
 
     return df
 
