@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from functools import lru_cache
 from pathlib import Path
 
 import pandas as pd
@@ -22,46 +21,27 @@ def load_all(
     return answers, questions, tags
 
 
-@lru_cache(maxsize=1)
 def load_answers(answers_file: Path | str, encoding: str) -> pd.DataFrame:
-    answers_pickle = (
-        Path(str(answers_file).replace(".csv", ".pkl"))
-        if isinstance(answers_file, Path)
-        else Path(answers_file.replace(".csv", ".pkl"))
-    )
-    if answers_pickle.exists():
-        return pd.read_pickle(answers_pickle)
-
-    df = pd.read_csv(answers_file, encoding=encoding)
-    pd.to_pickle(df, answers_pickle)
-    return df
+    return _loader(answers_file, encoding)
 
 
-@lru_cache(maxsize=1)
 def load_questions(questions_file: Path | str, encoding: str) -> pd.DateFrame:
-    questions_pickle = (
-        Path(str(questions_file).replace(".csv", ".pkl"))
-        if isinstance(questions_file, Path)
-        else Path(questions_file.replace(".csv", ".pkl"))
-    )
-    if questions_pickle.exists():
-        return pd.read_pickle(questions_pickle)
-
-    df = pd.read_csv(questions_file, encoding=encoding)
-    pd.to_pickle(df, questions_pickle)
-    return df
+    return _loader(questions_file, encoding)
 
 
-@lru_cache(maxsize=1)
 def load_tags(tags_file: Path | str, encoding: str) -> pd.DataFrame:
-    tags_pickle = (
-        Path(str(tags_file).replace(".csv", ".pkl"))
-        if isinstance(tags_file, Path)
-        else Path(tags_file.replace(".csv", ".pkl"))
-    )
-    if tags_pickle.exists():
-        return pd.read_pickle(tags_pickle)
+    return _loader(tags_file, encoding)
 
-    df = pd.read_csv(tags_file, encoding=encoding)
-    pd.to_pickle(df, tags_pickle)
+
+def _loader(file_path: Path | str, encoding: str) -> pd.DataFrame:
+    file_pickle = (
+        Path(str(file_path).replace(".csv", ".pkl"))
+        if isinstance(file_path, Path)
+        else Path(file_path.replace(".csv", ".pkl"))
+    )
+    if file_pickle.exists():
+        return pd.read_pickle(file_pickle)
+
+    df = pd.read_csv(file_path, encoding=encoding)
+    pd.to_pickle(df, file_pickle)
     return df

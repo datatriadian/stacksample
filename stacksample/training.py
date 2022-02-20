@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import pickle
 from multiprocessing import cpu_count
 from pathlib import Path
@@ -11,6 +12,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import f1_score
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.naive_bayes import GaussianNB
+
 from stacksample.console import console
 
 
@@ -30,6 +32,32 @@ def combine_and_format_data(
     random_state: int | None = None,
     lowercase: bool = False,
 ) -> pd.DataFrame:
+    CACHE_PATH = Path("data/cache")
+    if not CACHE_PATH.exists():
+        CACHE_PATH.mkdir(parents=True, exist_ok=True)
+
+    data_pickle = CACHE_PATH / "formatted.pkl"
+    params_file = CACHE_PATH / "params.json"
+    cache_params = {
+        "crop_sentences": crop_sentences,
+        "remove_html_tags": remove_html_tags,
+        "remove_line_breaks": remove_line_breaks,
+        "minimum_labels": minimum_labels,
+        "reduce_number_of_samples": reduce_number_of_samples,
+        "exclude_answers": exclude_answers,
+        "exclude_title": exclude_title,
+        "limit_tags": limit_tags,
+        "random_state": random_state,
+        "lowercase": lowercase,
+    }
+
+    if params_file.exists() and data_pickle.exists():
+        with open(params_file, "r") as f:
+            params = json.load(f)
+
+        if params == cache_params:
+            return pd.read_pickle(data_pickle)
+
     df = questions[["Id", "Body"]].rename(columns={"Id": "id", "Body": "sentences"})
 
     if not exclude_title:
@@ -82,6 +110,10 @@ def combine_and_format_data(
     if lowercase:
         df["sentences"] = df["sentences"].str.lower()
 
+    with open(params_file, "w") as f:
+        json.dump(cache_params, f)
+
+    pd.to_pickle(df, data_pickle)
     return df
 
 
