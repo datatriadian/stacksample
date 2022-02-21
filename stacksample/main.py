@@ -99,6 +99,7 @@ def train_all_models(
         help="The path for saving the SVM model if saving the model. Default = None",
     ),
     lowercase: bool = Option(False, help="Convert text to lowercase. Default = False"),
+    remove_stopwords: bool = Option(False, help="Remove stopwords. Default = False"),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -123,6 +124,7 @@ def train_all_models(
         exclude_title=exclude_title,
         limit_tags=limit_tags,
         lowercase=lowercase,
+        remove_stopwords=remove_stopwords,
     )
 
     train_naive_bayes_model(
@@ -225,6 +227,7 @@ def train_random_forest(
         None, help="The path for saving the model if saving the model. Default = None"
     ),
     lowercase: bool = Option(False, help="Convert text to lowercase. Default = False"),
+    remove_stopwords: bool = Option(False, help="Remove stopwords. Default = False"),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -249,6 +252,7 @@ def train_random_forest(
         exclude_title=exclude_title,
         limit_tags=limit_tags,
         lowercase=lowercase,
+        remove_stopwords=remove_stopwords,
     )
 
     train_random_forest_model(
@@ -325,6 +329,7 @@ def train_naive_bayes(
         None, help="The path for saving the model if saving the model. Default = None"
     ),
     lowercase: bool = Option(False, help="Convert text to lowercase. Default = False"),
+    remove_stopwords: bool = Option(False, help="Remove stopwords. Default = False"),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -349,6 +354,7 @@ def train_naive_bayes(
         exclude_title=exclude_title,
         limit_tags=limit_tags,
         lowercase=lowercase,
+        remove_stopwords=remove_stopwords,
     )
 
     train_naive_bayes_model(
@@ -424,6 +430,7 @@ def train_svm(
         None, help="The path for saving the model if saving the model. Default = None"
     ),
     lowercase: bool = Option(False, help="Convert text to lowercase. Default = False"),
+    remove_stopwords: bool = Option(False, help="Remove stopwords. Default = False"),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -448,6 +455,7 @@ def train_svm(
         exclude_title=exclude_title,
         limit_tags=limit_tags,
         lowercase=lowercase,
+        remove_stopwords=remove_stopwords,
     )
 
     train_svm_model(
@@ -527,6 +535,7 @@ def train_svm_grid_search(
         None, help="The path for saving the model if saving the model. Default = None"
     ),
     lowercase: bool = Option(False, help="Convert text to lowercase. Default = False"),
+    remove_stopwords: bool = Option(False, help="Remove stopwords. Default = False"),
 ) -> None:
     answers, questions, tags = _load_all(
         answers_file_path=answers_file_path,
@@ -551,6 +560,7 @@ def train_svm_grid_search(
         exclude_title=exclude_title,
         limit_tags=limit_tags,
         lowercase=lowercase,
+        remove_stopwords=remove_stopwords,
     )
 
     train_svm_model_grid_search(
@@ -562,27 +572,6 @@ def train_svm_grid_search(
         save_model=save_model,
         save_path=save_path,
     )
-
-
-def _load_all(
-    answers_file_path: Path,
-    answers_file_encoding: str,
-    questions_file_path: Path,
-    questions_file_encoding: str,
-    tags_file_path: Path,
-    tags_file_encoding: str,
-) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    with console.status("Loading data..."):
-        answers, questions, tags = load_all(
-            answers_file=answers_file_path,
-            answers_encoding=answers_file_encoding,
-            questions_file=questions_file_path,
-            questions_encoding=questions_file_encoding,
-            tags_file=tags_file_path,
-            tags_encoding=tags_file_encoding,
-        )
-
-    return answers, questions, tags
 
 
 @app.command()
@@ -634,6 +623,7 @@ def view_labels(
     limit_tags: Optional[int] = Option(
         None, help="Specifies the maximum number of tags to use in training. Default = None"
     ),
+    remove_stopwords: bool = Option(False, help="Remove stopwords. Default = False"),
 ) -> None:
     with console.status("Loading data..."):
         answers, questions, tags = load_all(
@@ -659,6 +649,7 @@ def view_labels(
             exclude_answers=exclude_answers,
             exclude_title=exclude_title,
             limit_tags=limit_tags,
+            remove_stopwords=remove_stopwords,
         )
 
     pd.set_option("display.max_rows", df.shape[0] + 1)
@@ -679,6 +670,7 @@ def _combine_and_format_data(
     exclude_title: bool,
     limit_tags: int | None,
     lowercase: bool,
+    remove_stopwords: bool,
 ) -> pd.DataFrame:
     with console.status("Preparing data..."):
         df = combine_and_format_data(
@@ -695,9 +687,31 @@ def _combine_and_format_data(
             exclude_title=exclude_title,
             limit_tags=limit_tags,
             lowercase=lowercase,
+            remove_stopwords=remove_stopwords,
         )
 
     return df
+
+
+def _load_all(
+    answers_file_path: Path,
+    answers_file_encoding: str,
+    questions_file_path: Path,
+    questions_file_encoding: str,
+    tags_file_path: Path,
+    tags_file_encoding: str,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    with console.status("Loading data..."):
+        answers, questions, tags = load_all(
+            answers_file=answers_file_path,
+            answers_encoding=answers_file_encoding,
+            questions_file=questions_file_path,
+            questions_encoding=questions_file_encoding,
+            tags_file=tags_file_path,
+            tags_encoding=tags_file_encoding,
+        )
+
+    return answers, questions, tags
 
 
 if __name__ == "__main__":
