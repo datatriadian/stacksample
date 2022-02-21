@@ -17,8 +17,6 @@ from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.naive_bayes import GaussianNB
 from stacksample.console import console
 
-nltk.download("stopwords")
-
 
 def combine_and_format_data(
     *,
@@ -337,6 +335,8 @@ def _remove_line_breaks(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _remove_stopwords(df: pd.DataFrame) -> pd.DataFrame:
+    nltk.download("stopwords")
+
     df["sentences"] = df["sentences"].apply(
         lambda x: " ".join([y for y in x.split(" ") if y.lower() not in stopwords.words("english")])
     )
