@@ -7,12 +7,14 @@ from pathlib import Path
 
 import pandas as pd
 from imblearn.over_sampling import SMOTE
+from nltk.corpus import stopwords
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import f1_score
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.naive_bayes import GaussianNB
+
 from stacksample.console import console
 
 
@@ -31,6 +33,7 @@ def combine_and_format_data(
     limit_tags: int | None = None,
     random_state: int | None = None,
     lowercase: bool = False,
+    remove_stopwords: bool = False,
 ) -> pd.DataFrame:
     CACHE_PATH = Path("data/cache")
     if not CACHE_PATH.exists():
@@ -103,6 +106,13 @@ def combine_and_format_data(
 
     if crop_sentences:
         df = _crop_sentences(df, crop_sentences)
+
+    if remove_stopwords:
+        df["sentences"] = df["sentences"].apply(
+            lambda x: " ".join(
+                [y for y in x.split(" ") if y.lower() not in stopwords.words("english")]
+            )
+        )
 
     if remove_line_breaks:
         df = _remove_line_breaks(df)
