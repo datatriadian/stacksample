@@ -5,6 +5,7 @@ import pickle
 from multiprocessing import cpu_count
 from pathlib import Path
 
+import nltk
 import pandas as pd
 from imblearn.over_sampling import SMOTE
 from nltk.corpus import stopwords
@@ -14,7 +15,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import f1_score
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.naive_bayes import GaussianNB
+
 from stacksample.console import console
+
+nltk.download("stopwords")
 
 
 def combine_and_format_data(
@@ -107,11 +111,7 @@ def combine_and_format_data(
         df = _crop_sentences(df, crop_sentences)
 
     if remove_stopwords:
-        df["sentences"] = df["sentences"].apply(
-            lambda x: " ".join(
-                [y for y in x.split(" ") if y.lower() not in stopwords.words("english")]
-            )
-        )
+        df = _remove_stopwords(df)
 
     if remove_line_breaks:
         df = _remove_line_breaks(df)
@@ -334,6 +334,14 @@ def _remove_html(df: pd.DataFrame) -> pd.DataFrame:
 
 def _remove_line_breaks(df: pd.DataFrame) -> pd.DataFrame:
     df["sentences"] = df["sentences"].str.replace(r"\\n", " ", regex=True)
+    return df
+
+
+def _remove_stopwords(df: pd.DataFrame) -> pd.DataFrame:
+    df["sentences"] = df["sentences"].apply(
+        lambda x: " ".join([y for y in x.split(" ") if y.lower() not in stopwords.words("english")])
+    )
+
     return df
 
 
