@@ -10,3 +10,13 @@ def test_composit_labels():
 
     assert grouped_tags["tag"][0] == "html, javascript"
     assert grouped_tags["count"][0] == 2
+
+
+def test_remove_stopwords():
+    data = {
+        "sentences": ["This is a test"],
+    }
+    df = pd.DataFrame(data=data)
+    df = training._remove_stopwords(df)
+
+    assert df["sentences"][0] == "test"
