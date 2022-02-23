@@ -14,7 +14,7 @@ scikit-learn = "^1.0.2"
 typer = "^0.4.0"
 imbalanced-learn = "^0.9.0"
 camel-converter = "^1.0.3"
-fastapi = "^0.74.0"
+fastapi = "^0.74.1"
 nltk = "^3.7"
 
 [tool.poetry.dev-dependencies]
