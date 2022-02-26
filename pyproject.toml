@@ -58,7 +58,7 @@ exclude = '''
 [tool.isort]
 profile = "black"
 line_length = 100
-src_paths = ["stacksample", "tests"]
+src_paths = ["stacksample", "tests", "app/backend"]
 
 [tool.mypy]
 check_untyped_defs = true

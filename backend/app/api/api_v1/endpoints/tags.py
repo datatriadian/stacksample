@@ -1,7 +1,6 @@
-from fastapi import APIRouter
-
 from app.core.classifier import load_classifier, load_vectorizer
 from app.models.tags import Sentance, TaggedSentence
+from fastapi import APIRouter
 
 router = APIRouter()
 
