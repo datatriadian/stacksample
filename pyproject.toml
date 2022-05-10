@@ -9,7 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.8, <3.11"  # scypi fails to install if <3.11 is not specified
 pandas = "^1.4.2"
-rich = "^12.3.0"
+rich = "^12.4.1"
 scikit-learn = "^1.0.2"
 typer = "^0.4.1"
 imbalanced-learn = "^0.9.0"

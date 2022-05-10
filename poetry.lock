@@ -526,7 +526,7 @@ python-versions = "*"
 
 [[package]]
 name = "rich"
-version = "12.3.0"
+version = "12.4.1"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
 category = "main"
 optional = false
@@ -710,7 +710,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.11"
-content-hash = "72c21652ef16c1bb5c11da161f9cb89e2c1ae1cb741ddf92086518263fa41555"
+content-hash = "7b50183cebe0b9247d39bed1c6c5ffc65a391784d7072806ad7bfca30d36dca2"
 
 [metadata.files]
 anyio = [
@@ -1143,8 +1143,8 @@ regex = [
     {file = "regex-2022.1.18.tar.gz", hash = "sha256:97f32dc03a8054a4c4a5ab5d761ed4861e828b2c200febd4e46857069a483916"},
 ]
 rich = [
-    {file = "rich-12.3.0-py3-none-any.whl", hash = "sha256:0eb63013630c6ee1237e0e395d51cb23513de6b5531235e33889e8842bdf3a6f"},
-    {file = "rich-12.3.0.tar.gz", hash = "sha256:7e8700cda776337036a712ff0495b04052fb5f957c7dfb8df997f88350044b64"},
+    {file = "rich-12.4.1-py3-none-any.whl", hash = "sha256:d13c6c90c42e24eb7ce660db397e8c398edd58acb7f92a2a88a95572b838aaa4"},
+    {file = "rich-12.4.1.tar.gz", hash = "sha256:d239001c0fb7de985e21ec9a4bb542b5150350330bbc1849f835b9cbc8923b91"},
 ]
 scikit-learn = [
     {file = "scikit-learn-1.0.2.tar.gz", hash = "sha256:b5870959a5484b614f26d31ca4c17524b1b0317522199dc985c3b4256e030767"},
