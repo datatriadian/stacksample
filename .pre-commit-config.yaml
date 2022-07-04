@@ -14,7 +14,7 @@ repos:
       additional_dependencies: [toml]
       args: [stacksample, tests, backend/app]
   - repo: https://github.com/psf/black
-    rev: 22.3.0
+    rev: 22.6.0
     hooks:
     - id: black
       language_version: python3
